@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-func processStatemets(lines [][]string, name string) []Statement {
-	_ = name
+func processStatemets(lines [][]string) []Statement {
 	statementId := 1
 	var statements []Statement = []Statement{}
 	var level []int = []int{}
@@ -19,22 +18,21 @@ func processStatemets(lines [][]string, name string) []Statement {
 			continue
 		}
 
-		// arrayIndex := statementId -1
-		levelFoo := len(regexp.MustCompile("^\\s*").FindString(line[0]))
-		if len(level) < levelFoo+1 {
+		levelIdx := len(regexp.MustCompile(`^\s*`).FindString(line[0]))
+		if len(level) < levelIdx+1 {
 			level = append(level, 0)
 			parentStatements = append(parentStatements, strconv.Itoa(statementId))
 		} else {
-			parentStatements = parentStatements[:levelFoo+1]
-			level = level[:levelFoo+1]
+			parentStatements = parentStatements[:levelIdx+1]
+			level = level[:levelIdx+1]
 		}
-		level[levelFoo]++
+		level[levelIdx]++
 		parentStatements[len(parentStatements)-1] = strconv.Itoa(statementId)
 
 		var individualizedValues []IndividualizedValue = []IndividualizedValue{}
 
 		for i := 1; i < len(line); i++ {
-			match, _ := regexp.MatchString("^(-|\\s)*$", line[i])
+			match, _ := regexp.MatchString(`^(-|\s)*$`, line[i])
 			if !match {
 				ammount, _ := strconv.ParseFloat(line[i], 64)
 				individualizedValues = append(individualizedValues, IndividualizedValue{

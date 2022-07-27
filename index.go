@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -44,7 +43,7 @@ func main() {
 
 	for _, file := range sourceFiles {
 		lines := openCsv(file)
-		var statements []Statement = processStatemets(lines, file)
+		var statements []Statement = processStatemets(lines)
 
 		if strings.Contains(file, "caixa") {
 			financialStatements.Caixa = CaixaT{
@@ -69,8 +68,11 @@ func main() {
 		}
 	}
 
-	data, _ := json.Marshal(financialStatements)
-	_ = data
-	fmt.Println(string(data)[:400])
+	if outputToFile(financialStatements, "resultado.json") == nil {
+		fmt.Print("Arquivo de saída (resultado.json) gerado com sucesso!")
+	} else {
+		fmt.Print("Falha ao gerar arquivo de saída. Execute o programa novamente!")
+	}
 
+	enterToClose()
 }
