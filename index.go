@@ -2,18 +2,29 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
+var inputDefinitions = map[string]*Variable{
+	"cnpj":       {"CNPJ", "Raiz do CNPJ. Numero de 8 dígitos", "92875780", `^\d{8}$`},
+	"doccode":    {"Código do Documento", "Código do Documento. Consulte documentação oficial.", "9011", `^9\d{2}1$`},
+	"type":       {"Tipo de  Remeça", "I (Inclusão) ou S (Substituição)", "I", `^(I|S)$`},
+	"multiplier": {"Unidade de Medida", "Indica o multiplicado adotado para os valores em reais ", "1000", `^\d+$`},
+	"basedate":   {"Data Base", "Mês (2 dígitos) + Ano (4 dígitos) - Referente ao último mês do período analisado", "", `^\d{6}$`},
+}
+
 func main() {
+	var inputs = getInputs(inputDefinitions)
 	var sourceFiles = []string{"balanco.csv", "caixa.csv", "dmpl.csv", "dra.csv", "dre.csv"}
 
+	multiplier, _ := strconv.ParseInt(inputs["multiplier"], 10, 32)
 	financialStatements := FinancialStatements{
-		Cnpj:             "foo-cnpj",
-		DocumentCode:     "foo-doc-code",
-		TypeRemittance:   "foo-type",
-		ValuesMultiplier: 0,
-		BaseDate:         "foo-base-date",
+		Cnpj:             inputs["cnpj"],
+		DocumentCode:     inputs["doccode"],
+		TypeRemittance:   inputs["type"],
+		ValuesMultiplier: int(multiplier),
+		BaseDate:         inputs["basedate"],
 		BaseDatesReferences: []BaseDatesReference{
 			{
 				Id:   "dt1",
