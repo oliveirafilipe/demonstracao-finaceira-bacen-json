@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func processStatemets(lines [][]string) []Statement {
+func processStatemets(lines [][]string, baseDates map[string]string) []Statement {
 	statementId := 1
 	var statements []Statement = []Statement{}
 	var level []int = []int{}
@@ -36,7 +36,7 @@ func processStatemets(lines [][]string) []Statement {
 			if !match {
 				ammount, _ := strconv.ParseFloat(line[i], 64)
 				individualizedValues = append(individualizedValues, IndividualizedValue{
-					BaseDate: fmt.Sprint("dt", i),
+					BaseDate: baseDates[lines[0][i]],
 					Ammount:  ammount,
 				})
 			}

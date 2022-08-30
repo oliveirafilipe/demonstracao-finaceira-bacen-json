@@ -15,32 +15,7 @@ var inputDefinitions = map[string]*Variable{
 }
 
 func main() {
-	var inputs = getInputs(inputDefinitions)
 	var sourceFiles = []string{"balanco.csv", "caixa.csv", "dmpl.csv", "dra.csv", "dre.csv"}
-
-	multiplier, _ := strconv.ParseInt(inputs["multiplier"], 10, 32)
-	financialStatements := FinancialStatements{
-		Cnpj:             inputs["cnpj"],
-		DocumentCode:     inputs["doccode"],
-		TypeRemittance:   inputs["type"],
-		ValuesMultiplier: int(multiplier),
-		BaseDate:         inputs["basedate"],
-		BaseDatesReferences: []BaseDatesReference{
-			{
-				Id:   "dt1",
-				Date: "FooDate1",
-			},
-			{
-				Id:   "dt2",
-				Date: "FooDate2",
-			},
-		},
-		BalancoPatrimonial: BalancoT{},
-		DRE:                DRET{},
-		Caixa:              CaixaT{},
-		DMPL:               DMPLT{},
-		DRA:                DRAT{},
-	}
 
 	missingFiles := checkRequiredFiles(sourceFiles)
 	if len(missingFiles) > 0 {
@@ -52,9 +27,37 @@ func main() {
 		return
 	}
 
+	var inputs = getInputs(inputDefinitions)
+	//inputs := map[string]string{"multiplier": "1000"}
+
+	var baseDatesMap = getBaseDates(sourceFiles)
+	var baseDates []BaseDatesReference
+	for date, id := range baseDatesMap {
+		baseDatesReference := BaseDatesReference{
+			Id:   id,
+			Date: date,
+		}
+		baseDates = append(baseDates, baseDatesReference)
+	}
+
+	multiplier, _ := strconv.ParseInt(inputs["multiplier"], 10, 32)
+	financialStatements := FinancialStatements{
+		Cnpj:                inputs["cnpj"],
+		DocumentCode:        inputs["doccode"],
+		TypeRemittance:      inputs["type"],
+		ValuesMultiplier:    int(multiplier),
+		BaseDate:            inputs["basedate"],
+		BaseDatesReferences: baseDates,
+		BalancoPatrimonial:  BalancoT{},
+		DRE:                 DRET{},
+		Caixa:               CaixaT{},
+		DMPL:                DMPLT{},
+		DRA:                 DRAT{},
+	}
+
 	for _, file := range sourceFiles {
 		lines := openCsv(file)
-		var statements []Statement = processStatemets(lines)
+		var statements []Statement = processStatemets(lines, baseDatesMap)
 
 		if strings.Contains(file, "caixa") {
 			financialStatements.Caixa = CaixaT{
