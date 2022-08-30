@@ -15,6 +15,8 @@ var inputDefinitions = map[string]*Variable{
 }
 
 func main() {
+	fmt.Println(header)
+
 	var sourceFiles = []string{"balanco.csv", "caixa.csv", "dmpl.csv", "dra.csv", "dre.csv"}
 
 	missingFiles := checkRequiredFiles(sourceFiles)
