@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -23,14 +24,13 @@ func main() {
 	if len(missingFiles) > 0 {
 		for _, missingFile := range checkRequiredFiles(sourceFiles) {
 			fmt.Println(fmt.Sprint("- Arquivo obrigatório não encontrado ", missingFile))
-
 		}
 		enterToClose()
 		return
 	}
 
-	var inputs = getInputs(inputDefinitions)
-	//inputs := map[string]string{"multiplier": "1000"}
+	var inputs = getInputs(inputDefinitions, os.Stdin)
+	// inputs := map[string]string{"multiplier": "1000"}
 
 	var baseDatesMap = getBaseDates(sourceFiles)
 	var baseDates []BaseDatesReference

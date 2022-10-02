@@ -22,17 +22,3 @@ func getBaseDates(files []string) map[string]string {
 
 	return baseDatesMap
 }
-
-// statement := Statement{
-// 	Id:                   "conta" + strconv.Itoa(statementId),
-// 	Description:          strings.TrimSpace(line[0]),
-// 	Level:                arrayToString(level, "."),
-// 	ParentStatement:      "",
-// 	IndividualizedValues: individualizedValues,
-// }
-
-// if len(parentStatements) >= 2 && len(parentStatements[len(parentStatements)-2]) != 0 {
-// 	statement.ParentStatement = fmt.Sprint("conta", parentStatements[len(parentStatements)-2])
-// }
-
-// statements = append(statements, statement)

@@ -3,9 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 	"regexp"
 	"sort"
+	"strings"
 )
 
 type Variable struct {
@@ -15,7 +16,7 @@ type Variable struct {
 	Validation  string
 }
 
-func getInputs(vars map[string]*Variable) map[string]string {
+func getInputs(vars map[string]*Variable, reader io.Reader) map[string]string {
 	var line string
 	var err error
 
@@ -40,9 +41,12 @@ func getInputs(vars map[string]*Variable) map[string]string {
 			if variable.Default != "" {
 				fmt.Printf("   ENTER para valor Default: %s\n", variable.Default)
 			}
-			bufa := bufio.NewReader(os.Stdin)
+			bufa := bufio.NewReader(reader)
 			line, err = bufa.ReadString('\n')
-			line = line[:len(line)-1]
+
+			line = strings.TrimSuffix(line, "\n")
+			line = strings.TrimSuffix(line, "\r")
+
 			if line == "" {
 				if variable.Default == "" {
 					fmt.Println("Um valor deve ser informado")
