@@ -6,9 +6,9 @@ import (
 	"regexp"
 )
 
-func getCSVsInFolder() []string {
+func getCSVsInFolder(base string) []string {
 	var CSVs []string
-	files, err := ioutil.ReadDir(".")
+	files, err := ioutil.ReadDir(base)
 	if err != nil {
 		log.Fatal(err)
 	}

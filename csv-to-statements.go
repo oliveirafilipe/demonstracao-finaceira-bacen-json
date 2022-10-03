@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func processStatemets(lines [][]string, baseDates map[string]string) []Statement {
+func processStatements(lines [][]string, baseDates map[string]string) []Statement {
 	statementId := 1
 	var statements []Statement = []Statement{}
 	var level []int = []int{}
