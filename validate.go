@@ -4,8 +4,8 @@ import (
 	"strings"
 )
 
-func checkRequiredFiles(requiredFiles []string) []string {
-	files := getCSVsInFolder()
+func checkRequiredFiles(requiredFiles []string, base string) []string {
+	files := getCSVsInFolder(base)
 	joinedFiles := strings.Join(files, ";")
 	var missingFiles []string = []string{}
 

@@ -20,9 +20,9 @@ func main() {
 
 	var sourceFiles = []string{"balanco.csv", "caixa.csv", "dmpl.csv", "dra.csv", "dre.csv"}
 
-	missingFiles := checkRequiredFiles(sourceFiles)
+	missingFiles := checkRequiredFiles(sourceFiles, ".")
 	if len(missingFiles) > 0 {
-		for _, missingFile := range checkRequiredFiles(sourceFiles) {
+		for _, missingFile := range missingFiles {
 			fmt.Println(fmt.Sprint("- Arquivo obrigatório não encontrado ", missingFile))
 		}
 		enterToClose()
@@ -59,7 +59,7 @@ func main() {
 
 	for _, file := range sourceFiles {
 		lines := openCsv(file)
-		var statements []Statement = processStatemets(lines, baseDatesMap)
+		var statements []Statement = processStatements(lines, baseDatesMap)
 
 		if strings.Contains(file, "caixa") {
 			financialStatements.Caixa = CaixaT{

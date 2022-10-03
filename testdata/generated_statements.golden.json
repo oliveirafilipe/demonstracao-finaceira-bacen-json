@@ -1,0 +1,82 @@
+[
+  {
+    "@id": "conta1",
+    "@descricao": "Value1",
+    "@nivel": "1",
+    "@contaPai": "",
+    "valoresIndividualizados": [
+      {
+        "@dtBase": "dt1",
+        "@valor": 100
+      },
+      {
+        "@dtBase": "dt2",
+        "@valor": 200
+      }
+    ]
+  },
+  {
+    "@id": "conta2",
+    "@descricao": "Value2",
+    "@nivel": "2",
+    "@contaPai": "",
+    "valoresIndividualizados": [
+      {
+        "@dtBase": "dt1",
+        "@valor": 50.123
+      },
+      {
+        "@dtBase": "dt2",
+        "@valor": 100.123
+      }
+    ]
+  },
+  {
+    "@id": "conta3",
+    "@descricao": "Value2.1",
+    "@nivel": "2.1",
+    "@contaPai": "conta2",
+    "valoresIndividualizados": [
+      {
+        "@dtBase": "dt1",
+        "@valor": 30.123
+      },
+      {
+        "@dtBase": "dt2",
+        "@valor": 70
+      }
+    ]
+  },
+  {
+    "@id": "conta4",
+    "@descricao": "Value2.2",
+    "@nivel": "2.2",
+    "@contaPai": "conta2",
+    "valoresIndividualizados": [
+      {
+        "@dtBase": "dt1",
+        "@valor": 20
+      },
+      {
+        "@dtBase": "dt2",
+        "@valor": 30
+      }
+    ]
+  },
+  {
+    "@id": "conta5",
+    "@descricao": "Value2.2.1",
+    "@nivel": "2.2.1",
+    "@contaPai": "conta4",
+    "valoresIndividualizados": [
+      {
+        "@dtBase": "dt1",
+        "@valor": 20
+      },
+      {
+        "@dtBase": "dt2",
+        "@valor": 30.123
+      }
+    ]
+  }
+]

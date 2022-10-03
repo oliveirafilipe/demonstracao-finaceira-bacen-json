@@ -1,2 +1,4 @@
 *.csv
 *.json
+!testdata/*.csv
+!testdata/*.golden.json
