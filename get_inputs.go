@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"regexp"
 	"sort"
 	"strings"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/inputvar"
 )
 
 type Variable struct {
@@ -16,11 +16,7 @@ type Variable struct {
 	Validation  string
 }
 
-func getInputs(vars map[string]*Variable, reader io.Reader) map[string]string {
-	var line string
-	var err error
-
-	var result = make(map[string]string)
+func GetInputs(vars map[string]*inputvar.Input, reader io.Reader) error {
 
 	keys := make([]string, len(vars))
 
@@ -35,38 +31,35 @@ func getInputs(vars map[string]*Variable, reader io.Reader) map[string]string {
 	for _, key := range keys {
 		variable := vars[key]
 		for {
-			fmt.Printf("\nVariable: %s\n", variable.Name)
-			fmt.Printf("   Descrição: %s\n", variable.Description)
+			fmt.Printf("\nVariable: %s\n", variable.Message)
 
 			if variable.Default != "" {
 				fmt.Printf("   ENTER para valor Default: %s\n", variable.Default)
 			}
-			bufa := bufio.NewReader(reader)
-			line, err = bufa.ReadString('\n')
+			reader := bufio.NewReader(reader)
+			line, err := reader.ReadString('\n')
+
+			if err != nil {
+				return err
+			}
 
 			line = strings.TrimSuffix(line, "\n")
 			line = strings.TrimSuffix(line, "\r")
 
 			if line == "" {
-				if variable.Default == "" {
+				if variable.IsEmpty() {
 					fmt.Println("Um valor deve ser informado")
 					continue
-				} else {
-					line = variable.Default
 				}
-			} else if variable.Validation != "" {
-				r := regexp.MustCompile(variable.Validation)
-				if !r.Match([]byte(line)) {
+			} else {
+				if err := variable.SetValue(line); err != nil {
 					fmt.Println("Valor informado não é valido")
 					continue
 				}
-
 			}
 			break
 		}
-		_ = err
-		result[key] = line
 	}
 
-	return result
+	return nil
 }
