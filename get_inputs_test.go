@@ -2,48 +2,80 @@ package main
 
 import (
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/inputvar"
 )
 
 func TestGetInputsWindows(t *testing.T) {
 	inMemory := strings.NewReader("123\r\n")
 
-	inputs := getInputs(map[string]*Variable{
-		"foo": {"foo", "Foo Description", "", `^\d{3}$`},
+	var inputObj, err = inputvar.Create(inputvar.Options{
+		Message:    "Foo Description",
+		Default:    "",
+		Validation: *regexp.MustCompile(`^\d{3}$`),
+	})
+
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err)
+	}
+
+	GetInputs(map[string]*inputvar.Input{
+		"foo": inputObj,
 	}, inMemory)
 
-	expectedInputs := map[string]string{"foo": "123"}
+	expectedValue := "123"
 
-	if !reflect.DeepEqual(inputs, expectedInputs) {
-		t.Fatalf("erro")
+	if !reflect.DeepEqual(inputObj.Value, expectedValue) {
+		t.Fatalf("Got: %s\nWant: %s", inputObj.Value, expectedValue)
 	}
 }
 
 func TestGetInputsUnix(t *testing.T) {
 	inMemory := strings.NewReader("123\n")
 
-	inputs := getInputs(map[string]*Variable{
-		"foo": {"foo", "Foo Description", "", `^\d{3}$`},
+	var inputObj, err = inputvar.Create(inputvar.Options{
+		Message:    "Foo Description",
+		Default:    "",
+		Validation: *regexp.MustCompile(`^\d{3}$`),
+	})
+
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err)
+	}
+
+	GetInputs(map[string]*inputvar.Input{
+		"foo": inputObj,
 	}, inMemory)
 
-	expectedInputs := map[string]string{"foo": "123"}
+	expectedValue := "123"
 
-	if !reflect.DeepEqual(inputs, expectedInputs) {
-		t.Fatalf("erro")
+	if !reflect.DeepEqual(inputObj.Value, expectedValue) {
+		t.Fatalf("Got: %s\nWant: %s", inputObj.Value, expectedValue)
 	}
 }
 
 func TestShouldGetDefaultValue(t *testing.T) {
 	inMemory := strings.NewReader("\n")
 
-	inputs := getInputs(map[string]*Variable{
-		"foo": {"foo", "Foo Description", "890", `^\d{3}$`},
+	var inputObj, err = inputvar.Create(inputvar.Options{
+		Message:    "Foo Description",
+		Default:    "890",
+		Validation: *regexp.MustCompile(`^\d{3}$`),
+	})
+
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err)
+	}
+
+	GetInputs(map[string]*inputvar.Input{
+		"foo": inputObj,
 	}, inMemory)
 
-	expectedInputs := map[string]string{"foo": "890"}
+	expectedValue := "890"
 
-	if !reflect.DeepEqual(inputs, expectedInputs) {
-		t.Fatalf("erro")
+	if !reflect.DeepEqual(inputObj.Value, expectedValue) {
+		t.Fatalf("Got: %s\nWant: %s", inputObj.Value, expectedValue)
 	}
 }
