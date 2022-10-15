@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
 )
 
 func main() {
@@ -25,9 +26,9 @@ func main() {
 	GetInputs(inputs, os.Stdin)
 
 	var baseDatesMap = getBaseDates(sourceFiles)
-	var baseDates []BaseDatesReference
+	var baseDates []finstm.BaseDatesReference
 	for date, id := range baseDatesMap {
-		baseDatesReference := BaseDatesReference{
+		baseDatesReference := finstm.BaseDatesReference{
 			Id:   id,
 			Date: date,
 		}
@@ -35,48 +36,48 @@ func main() {
 	}
 
 	multiplier, _ := strconv.ParseInt(inputs["multiplier"].Value, 10, 32)
-	financialStatements := FinancialStatements{
+	financialStatements := finstm.FinancialStatements{
 		Cnpj:                inputs["cnpj"].Value,
 		DocumentCode:        inputs["doccode"].Value,
 		TypeRemittance:      inputs["type"].Value,
 		ValuesMultiplier:    int(multiplier),
 		BaseDate:            inputs["basedate"].Value,
 		BaseDatesReferences: baseDates,
-		BalancoPatrimonial:  BalancoT{},
-		DRE:                 DRET{},
-		Caixa:               CaixaT{},
-		DMPL:                DMPLT{},
-		DRA:                 DRAT{},
+		BalancoPatrimonial:  finstm.BalancoT{},
+		DRE:                 finstm.DRET{},
+		Caixa:               finstm.CaixaT{},
+		DMPL:                finstm.DMPLT{},
+		DRA:                 finstm.DRAT{},
 	}
 
 	for _, file := range sourceFiles {
 		lines := openCsv(file)
-		var statements []Statement = processStatements(lines, baseDatesMap)
+		var statements []finstm.Statement = processStatements(lines, baseDatesMap)
 
 		if strings.Contains(file, "caixa") {
-			financialStatements.Caixa = CaixaT{
+			financialStatements.Caixa = finstm.CaixaT{
 				Statements: statements,
 			}
 		} else if strings.Contains(file, "balanco") {
-			financialStatements.BalancoPatrimonial = BalancoT{
+			financialStatements.BalancoPatrimonial = finstm.BalancoT{
 				Statements: statements,
 			}
 		} else if strings.Contains(file, "dmpl") {
-			financialStatements.DMPL = DMPLT{
+			financialStatements.DMPL = finstm.DMPLT{
 				Statements: statements,
 			}
 		} else if strings.Contains(file, "dra") {
-			financialStatements.DRA = DRAT{
+			financialStatements.DRA = finstm.DRAT{
 				Statements: statements,
 			}
 		} else if strings.Contains(file, "dre") {
-			financialStatements.DRE = DRET{
+			financialStatements.DRE = finstm.DRET{
 				Statements: statements,
 			}
 		}
 	}
 
-	if outputToFile(financialStatements, "resultado.json") == nil {
+	if err := financialStatements.Save(); err == nil {
 		fmt.Print("Arquivo de saída (resultado.json) gerado com sucesso!")
 	} else {
 		fmt.Print("Falha ao gerar arquivo de saída. Execute o programa novamente!")

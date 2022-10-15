@@ -1,22 +1,21 @@
-package main
+package finstm
+
+import (
+	"encoding/json"
+	"os"
+)
 
 type IndividualizedValue struct {
 	BaseDate string  `json:"@dtBase"`
-	Ammount  float64 `json:"@valor"`
+	Amount   float64 `json:"@valor"`
 }
 
-// The same json tags will be used to encode data into JSON
 type Statement struct {
 	Id                   string                `json:"@id"`
 	Description          string                `json:"@descricao"`
 	Level                string                `json:"@nivel"`
 	ParentStatement      string                `json:"@contaPai"`
 	IndividualizedValues []IndividualizedValue `json:"valoresIndividualizados"`
-}
-
-type BaseDatesReference struct {
-	Id   string `json:"@id"`
-	Date string `json:"@data"`
 }
 
 // BalancoPatrimonial
@@ -44,6 +43,11 @@ type DRAT struct {
 	Statements []Statement `json:"contas"`
 }
 
+type BaseDatesReference struct {
+	Id   string `json:"@id"`
+	Date string `json:"@data"`
+}
+
 type FinancialStatements struct {
 	Cnpj                string               `json:"@cnpj"`
 	DocumentCode        string               `json:"@codigoDocumento"`
@@ -56,4 +60,16 @@ type FinancialStatements struct {
 	Caixa               CaixaT               `json:"DemonstracaoDosFluxosDeCaixa"`
 	DMPL                DMPLT                `json:"DemonstracaoDasMutacoesDoPatrimonioLiquido"`
 	DRA                 DRAT                 `json:"DemonstracaoDoResultadoAbrangente"`
+}
+
+func (fst *FinancialStatements) Save() error {
+	return fst.SaveWithName("resultado.json")
+}
+
+func (fst *FinancialStatements) SaveWithName(fileName string) error {
+	file, _ := json.MarshalIndent(fst, "", "  ")
+
+	err := os.WriteFile(fileName, file, 0644)
+
+	return err
 }

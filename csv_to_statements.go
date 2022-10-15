@@ -5,11 +5,12 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
 )
 
-func processStatements(lines [][]string, baseDates map[string]string) []Statement {
+func processStatements(lines [][]string, baseDates map[string]string) []finstm.Statement {
 	statementId := 1
-	var statements []Statement = []Statement{}
+	var statements []finstm.Statement = []finstm.Statement{}
 	var level []int = []int{}
 	var parentStatements []string = []string{}
 	for _, line := range lines[1:] {
@@ -29,15 +30,15 @@ func processStatements(lines [][]string, baseDates map[string]string) []Statemen
 		level[levelIdx]++
 		parentStatements[len(parentStatements)-1] = strconv.Itoa(statementId)
 
-		var individualizedValues []IndividualizedValue = []IndividualizedValue{}
+		var individualizedValues []finstm.IndividualizedValue = []finstm.IndividualizedValue{}
 
 		for i := 1; i < len(line); i++ {
 			match, _ := regexp.MatchString(`^(-|\s)*$`, line[i])
 			if !match {
-				ammount, _ := strconv.ParseFloat(line[i], 64)
-				individualizedValues = append(individualizedValues, IndividualizedValue{
+				amount, _ := strconv.ParseFloat(line[i], 64)
+				individualizedValues = append(individualizedValues, finstm.IndividualizedValue{
 					BaseDate: baseDates[lines[0][i]],
-					Ammount:  ammount,
+					Amount:   amount,
 				})
 			}
 		}
@@ -46,7 +47,7 @@ func processStatements(lines [][]string, baseDates map[string]string) []Statemen
 			continue
 		}
 
-		statement := Statement{
+		statement := finstm.Statement{
 			Id:                   "conta" + strconv.Itoa(statementId),
 			Description:          strings.TrimSpace(line[0]),
 			Level:                arrayToString(level, "."),
