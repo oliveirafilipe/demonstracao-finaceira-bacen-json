@@ -11,7 +11,7 @@ import (
 func TestGetInputsWindows(t *testing.T) {
 	inMemory := strings.NewReader("123\r\n")
 
-	var inputObj, err = inputvar.Create(inputvar.Options{
+	var inputObj, err = inputvar.New(inputvar.Options{
 		Message:    "Foo Description",
 		Default:    "",
 		Validation: *regexp.MustCompile(`^\d{3}$`),
@@ -35,7 +35,7 @@ func TestGetInputsWindows(t *testing.T) {
 func TestGetInputsUnix(t *testing.T) {
 	inMemory := strings.NewReader("123\n")
 
-	var inputObj, err = inputvar.Create(inputvar.Options{
+	var inputObj, err = inputvar.New(inputvar.Options{
 		Message:    "Foo Description",
 		Default:    "",
 		Validation: *regexp.MustCompile(`^\d{3}$`),
@@ -59,7 +59,7 @@ func TestGetInputsUnix(t *testing.T) {
 func TestShouldGetDefaultValue(t *testing.T) {
 	inMemory := strings.NewReader("\n")
 
-	var inputObj, err = inputvar.Create(inputvar.Options{
+	var inputObj, err = inputvar.New(inputvar.Options{
 		Message:    "Foo Description",
 		Default:    "890",
 		Validation: *regexp.MustCompile(`^\d{3}$`),

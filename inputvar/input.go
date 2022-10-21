@@ -35,7 +35,7 @@ type Options struct {
 	Validation regexp.Regexp
 }
 
-func Create(inputCreation Options) (*Input, error) {
+func New(inputCreation Options) (*Input, error) {
 	var input = &Input{
 		Message:    inputCreation.Message,
 		Default:    inputCreation.Default,
