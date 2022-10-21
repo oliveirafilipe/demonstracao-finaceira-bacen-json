@@ -8,7 +8,7 @@ import (
 
 func TestErrorForInvalidDefault(t *testing.T) {
 
-	var _, err = Create(Options{
+	var _, err = New(Options{
 		Message:    "Foo",
 		Default:    "foo",
 		Validation: *regexp.MustCompile("bar"),
@@ -21,7 +21,7 @@ func TestErrorForInvalidDefault(t *testing.T) {
 
 func TestValueShouldBeEqualToDefault(t *testing.T) {
 
-	var inputObj, err = Create(Options{
+	var inputObj, err = New(Options{
 		Message:    "Foo",
 		Default:    "123",
 		Validation: *regexp.MustCompile(`^\d{3}$`),
@@ -38,7 +38,7 @@ func TestValueShouldBeEqualToDefault(t *testing.T) {
 
 func TestShouldGetErrorForInvalidValue(t *testing.T) {
 
-	var inputObj, err = Create(Options{
+	var inputObj, err = New(Options{
 		Message:    "Foo",
 		Default:    "123",
 		Validation: *regexp.MustCompile(`^\d{3}$`),
