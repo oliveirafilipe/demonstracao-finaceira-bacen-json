@@ -1,4 +1,4 @@
-package main
+package opencsv
 
 import (
 	"encoding/csv"
@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func openCsv(fileName string) [][]string {
+func OpenCsv(fileName string) ([][]string, error) {
 	csvFile, err := os.Open(fileName)
 	if err != nil {
 		fmt.Println(err)
@@ -15,10 +15,5 @@ func openCsv(fileName string) [][]string {
 
 	csvr := csv.NewReader(csvFile)
 	csvr.FieldsPerRecord = -1
-	csvLines, err := csvr.ReadAll()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return csvLines
+	return csvr.ReadAll()
 }

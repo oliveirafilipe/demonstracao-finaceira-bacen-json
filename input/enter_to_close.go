@@ -1,8 +1,8 @@
-package main
+package input
 
 import "fmt"
 
-func enterToClose() {
+func EnterToClose() {
 	var foo string
 
 	fmt.Printf("\nAperte ENTER para finalizar...")

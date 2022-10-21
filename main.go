@@ -4,28 +4,75 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/basedates"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/datasource"
 	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
+	"warrenbrasil/demonstracao-finaceira-bacen-json/input"
 )
+
+type Source struct {
+	Path       string
+	DataSource *datasource.CSV
+	Statements []finstm.Statement
+}
 
 func main() {
 	fmt.Println(header)
 
-	var sourceFiles = []string{"balanco.csv", "caixa.csv", "dmpl.csv", "dra.csv", "dre.csv"}
+	var sourceFiles = map[string]*Source{
+		"balanco": {
+			Path: "./balanco.csv",
+		},
+		"caixa": {
+			Path: "./caixa.csv",
+		},
+		"dmpl": {
+			Path: "./caixa.csv",
+		},
+		"dra": {
+			Path: "./dra.csv",
+		},
+		"dre": {
+			Path: "./dre.csv",
+		},
+	}
+	var errorFlag = false
 
-	missingFiles := checkRequiredFiles(sourceFiles, ".")
-	if len(missingFiles) > 0 {
-		for _, missingFile := range missingFiles {
-			fmt.Println(fmt.Sprint("- Arquivo obrigatório não encontrado ", missingFile))
+	for _, el := range sourceFiles {
+		csv, err := datasource.NewCSV(el.Path)
+		if err != nil {
+			errorFlag = true
+			if err == err.(*os.PathError) {
+				fmt.Println(fmt.Sprint("- Arquivo obrigatório não encontrado ", el.Path))
+			} else {
+				fmt.Print("unknown error")
+			}
+		} else {
+			el.DataSource = csv
 		}
-		enterToClose()
+	}
+	if errorFlag {
+		input.EnterToClose()
 		return
 	}
 
-	var inputs = Questions()
-	GetInputs(inputs, os.Stdin)
+	var questions = Questions()
+	input.GetInputs(questions, os.Stdin)
 
-	var baseDatesMap = getBaseDates(sourceFiles)
+	// // ====== GET DATES FROM FILES ======
+	dates := []string{}
+	for _, el := range sourceFiles {
+		baseDates, err := el.DataSource.GetBaseDates()
+		if err != nil {
+			fmt.Print("Erro na busca de datas. Encerrando...")
+			return
+		} else {
+			dates = append(dates, baseDates...)
+		}
+	}
+
+	// // ====== GENERATE IDs FOR DATES ======
+	var baseDatesMap = basedates.GenerateIDsForDates(dates)
 	var baseDates []finstm.BaseDatesReference
 	for date, id := range baseDatesMap {
 		baseDatesReference := finstm.BaseDatesReference{
@@ -35,46 +82,38 @@ func main() {
 		baseDates = append(baseDates, baseDatesReference)
 	}
 
-	multiplier, _ := strconv.ParseInt(inputs["multiplier"].Value, 10, 32)
-	financialStatements := finstm.FinancialStatements{
-		Cnpj:                inputs["cnpj"].Value,
-		DocumentCode:        inputs["doccode"].Value,
-		TypeRemittance:      inputs["type"].Value,
-		ValuesMultiplier:    int(multiplier),
-		BaseDate:            inputs["basedate"].Value,
-		BaseDatesReferences: baseDates,
-		BalancoPatrimonial:  finstm.BalancoT{},
-		DRE:                 finstm.DRET{},
-		Caixa:               finstm.CaixaT{},
-		DMPL:                finstm.DMPLT{},
-		DRA:                 finstm.DRAT{},
+	// // ====== GET STATEMENTS FROM FILES, USING DATES AND THEIR IDs ======
+	for _, file := range sourceFiles {
+		statements, err := file.DataSource.GetStatements(baseDatesMap)
+		if err != nil {
+			fmt.Print("fatal")
+		}
+		file.Statements = statements
 	}
 
-	for _, file := range sourceFiles {
-		lines := openCsv(file)
-		var statements []finstm.Statement = processStatements(lines, baseDatesMap)
-
-		if strings.Contains(file, "caixa") {
-			financialStatements.Caixa = finstm.CaixaT{
-				Statements: statements,
-			}
-		} else if strings.Contains(file, "balanco") {
-			financialStatements.BalancoPatrimonial = finstm.BalancoT{
-				Statements: statements,
-			}
-		} else if strings.Contains(file, "dmpl") {
-			financialStatements.DMPL = finstm.DMPLT{
-				Statements: statements,
-			}
-		} else if strings.Contains(file, "dra") {
-			financialStatements.DRA = finstm.DRAT{
-				Statements: statements,
-			}
-		} else if strings.Contains(file, "dre") {
-			financialStatements.DRE = finstm.DRET{
-				Statements: statements,
-			}
-		}
+	multiplier, _ := strconv.ParseInt(questions["multiplier"].Value, 10, 32)
+	financialStatements := finstm.FinancialStatements{
+		Cnpj:                questions["cnpj"].Value,
+		DocumentCode:        questions["doccode"].Value,
+		TypeRemittance:      questions["type"].Value,
+		ValuesMultiplier:    int(multiplier),
+		BaseDate:            questions["basedate"].Value,
+		BaseDatesReferences: baseDates,
+		BalancoPatrimonial: finstm.BalancoT{
+			Statements: sourceFiles["balanco"].Statements,
+		},
+		DRE: finstm.DRET{
+			Statements: sourceFiles["dre"].Statements,
+		},
+		Caixa: finstm.CaixaT{
+			Statements: sourceFiles["caixa"].Statements,
+		},
+		DMPL: finstm.DMPLT{
+			Statements: sourceFiles["dmpl"].Statements,
+		},
+		DRA: finstm.DRAT{
+			Statements: sourceFiles["dra"].Statements,
+		},
 	}
 
 	if err := financialStatements.Save(); err == nil {
@@ -83,5 +122,5 @@ func main() {
 		fmt.Print("Falha ao gerar arquivo de saída. Execute o programa novamente!")
 	}
 
-	enterToClose()
+	input.EnterToClose()
 }
