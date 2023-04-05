@@ -116,6 +116,19 @@ func main() {
 		},
 	}
 
+	var noSubitem = true
+	for _, a := range sourceFiles["balanco"].Statements {
+		if len(a.ParentStatement) != 0 {
+			fmt.Println(len(a.ParentStatement))
+			fmt.Println((a.ParentStatement))
+			noSubitem = false
+		}
+	}
+
+	if noSubitem {
+		fmt.Println("ATENÇÃO: Revise se você corretamente subagrupou os items da demonstração conforme indicado pela documentação do programa.")
+	}
+
 	if err := financialStatements.Save(); err == nil {
 		fmt.Print("Arquivo de saída (resultado.json) gerado com sucesso!")
 	} else {
