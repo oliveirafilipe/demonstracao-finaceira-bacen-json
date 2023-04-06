@@ -45,7 +45,7 @@ func main() {
 			if err == err.(*os.PathError) {
 				fmt.Println(fmt.Sprint("- Arquivo obrigatório não encontrado ", el.Path))
 			} else {
-				fmt.Print("unknown error")
+				fmt.Print("ERRO: Falha ao verificar existências dos arquivos.")
 			}
 		} else {
 			el.DataSource = csv
@@ -64,7 +64,8 @@ func main() {
 	for _, el := range sourceFiles {
 		baseDates, err := el.DataSource.GetBaseDates()
 		if err != nil {
-			fmt.Print("Erro na busca de datas. Encerrando...")
+			fmt.Print("ERRO: Erro na busca de datas. Verifique se todo os arquivos possuem conteudo. Encerrando...")
+			input.EnterToClose()
 			return
 		} else {
 			dates = append(dates, baseDates...)
@@ -86,7 +87,9 @@ func main() {
 	for _, file := range sourceFiles {
 		statements, err := file.DataSource.GetStatements(baseDatesMap)
 		if err != nil {
-			fmt.Print("fatal")
+			fmt.Print("ERRO: Falha ao buscar demonstrativos do arquivo.")
+			input.EnterToClose()
+			return
 		}
 		file.Statements = statements
 	}
@@ -119,7 +122,7 @@ func main() {
 	if err := financialStatements.Save(); err == nil {
 		fmt.Print("Arquivo de saída (resultado.json) gerado com sucesso!")
 	} else {
-		fmt.Print("Falha ao gerar arquivo de saída. Execute o programa novamente!")
+		fmt.Print("ERRO: Falha ao gerar arquivo de saída. Execute o programa novamente!")
 	}
 
 	input.EnterToClose()
