@@ -1,6 +1,7 @@
 package datasource
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -32,6 +33,10 @@ func (csv *CSV) GetBaseDates() ([]string, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	if len(lines) == 0 {
+		return nil,  errors.New("Empty CSV")
 	}
 
 	for _, column := range lines[0] {
