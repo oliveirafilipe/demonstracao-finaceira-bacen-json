@@ -52,6 +52,7 @@ func main() {
 		}
 	}
 	if errorFlag {
+		fmt.Println("DICA: Se você está no Windows, talvez você precise retirar a extensão (.csv) do nome do arquivo.")
 		input.EnterToClose()
 		return
 	}
