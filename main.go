@@ -18,7 +18,7 @@ type Source struct {
 }
 
 func main() {
-	fmt.Println(header)
+	fmt.Println(getHeader())
 
 	var sourceFiles = map[string]*Source{
 		"balanco": {
