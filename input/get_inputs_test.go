@@ -5,7 +5,8 @@ import (
 	"regexp"
 	"strings"
 	"testing"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/inputvar"
+
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/inputvar"
 )
 
 func TestGetInputsWindows(t *testing.T) {

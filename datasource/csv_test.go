@@ -3,8 +3,9 @@ package datasource
 import (
 	"reflect"
 	"testing"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/basedates"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
+
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/basedates"
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/finstm"
 )
 
 func TestGetBaseDates(t *testing.T) {
