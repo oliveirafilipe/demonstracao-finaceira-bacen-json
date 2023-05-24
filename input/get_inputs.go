@@ -6,7 +6,8 @@ import (
 	"io"
 	"sort"
 	"strings"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/inputvar"
+
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/inputvar"
 )
 
 type Variable struct {

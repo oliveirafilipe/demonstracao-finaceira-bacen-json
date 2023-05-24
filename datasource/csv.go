@@ -8,7 +8,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
+
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/finstm"
 )
 
 type CSV struct {

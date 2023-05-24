@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/basedates"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/datasource"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/input"
+
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/basedates"
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/datasource"
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/finstm"
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/input"
 )
 
 type Source struct {

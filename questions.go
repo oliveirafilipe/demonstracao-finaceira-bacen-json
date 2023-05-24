@@ -2,7 +2,8 @@ package main
 
 import (
 	"regexp"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/inputvar"
+
+	"github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/inputvar"
 )
 
 func Questions() map[string]*inputvar.Input {
