@@ -45,7 +45,7 @@ func (csv *CSV) GetBaseDates() ([]string, error) {
 	}
 
 	if len(lines) == 0 {
-		return nil,  errors.New("Empty CSV")
+		return nil, errors.New("empty CSV")
 	}
 
 	for _, column := range lines[0] {
@@ -64,16 +64,16 @@ func (csv *CSV) GetStatements(baseDatesMap map[string]string) ([]finstm.Statemen
 		return nil, err
 	}
 
-	return ProcessStatements(lines, baseDatesMap), nil
+	return ProcessStatements(lines, baseDatesMap)
 
 }
 
-func ProcessStatements(lines [][]string, baseDates map[string]string) []finstm.Statement {
+func ProcessStatements(lines [][]string, baseDates map[string]string) ([]finstm.Statement, error) {
 	statementId := 1
 	var statements []finstm.Statement = []finstm.Statement{}
 	var level []int = []int{}
 	var parentStatements []string = []string{}
-	for _, line := range lines[1:] {
+	for lineIdx, line := range lines[1:] {
 		match, _ := regexp.MatchString("^(-|\\s)*$", line[0])
 		if match {
 			continue
@@ -104,6 +104,10 @@ func ProcessStatements(lines [][]string, baseDates map[string]string) []finstm.S
 			parentStatements = parentStatements[:levelIdx+1]
 			level = level[:levelIdx+1]
 		}
+		if levelIdx >= len(level) {
+			// lineIdx+2 because 'lines' param doesn't contain first line and lineIdx in for loop starts at 0
+			return nil, fmt.Errorf("hierarquia incorreta para linha %d", lineIdx+2)
+		}
 		level[levelIdx]++
 		parentStatements[len(parentStatements)-1] = strconv.Itoa(statementId)
 
@@ -124,7 +128,7 @@ func ProcessStatements(lines [][]string, baseDates map[string]string) []finstm.S
 		statementId++
 	}
 
-	return statements
+	return statements, nil
 }
 
 func arrayToString(a []int, delim string) string {

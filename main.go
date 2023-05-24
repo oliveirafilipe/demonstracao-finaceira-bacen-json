@@ -65,7 +65,7 @@ func main() {
 	for _, el := range sourceFiles {
 		baseDates, err := el.DataSource.GetBaseDates()
 		if err != nil {
-			fmt.Print("ERRO: Erro na busca de datas. Verifique se todo os arquivos possuem conteudo. Encerrando...")
+			fmt.Printf("ERRO: Erro na busca de datas do arquivo %s, verifique se este possui conteudo. Encerrando...", el.Path)
 			input.EnterToClose()
 			return
 		} else {
@@ -88,7 +88,7 @@ func main() {
 	for _, file := range sourceFiles {
 		statements, err := file.DataSource.GetStatements(baseDatesMap)
 		if err != nil {
-			fmt.Print("ERRO: Falha ao buscar demonstrativos do arquivo.")
+			fmt.Printf("ERRO: Falha ao buscar demonstrativos do arquivo %s. %s", file.Path, err)
 			input.EnterToClose()
 			return
 		}
