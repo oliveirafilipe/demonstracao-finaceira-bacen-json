@@ -1,6 +1,7 @@
 package datasource
 
 import (
+	"encoding/csv"
 	"errors"
 	"fmt"
 	"os"
@@ -8,28 +9,36 @@ import (
 	"strconv"
 	"strings"
 	"warrenbrasil/demonstracao-finaceira-bacen-json/finstm"
-	"warrenbrasil/demonstracao-finaceira-bacen-json/opencsv"
 )
 
 type CSV struct {
 	Path string
 }
 
-func NewCSV(path string) (*CSV, error) {
+func CheckFile(path string) error {
+	file, err := os.Open(path)
+	if err == nil {
+		defer file.Close()
+	}
+	return err
+}
+
+func openCsv(path string) ([][]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
-	return &CSV{
-		Path: path,
-	}, nil
+
+	csvr := csv.NewReader(file)
+	csvr.FieldsPerRecord = -1
+	return csvr.ReadAll()
 }
 
 func (csv *CSV) GetBaseDates() ([]string, error) {
 	baseDates := []string{}
 
-	lines, err := opencsv.OpenCsv(csv.Path)
+	lines, err := openCsv(csv.Path)
 
 	if err != nil {
 		return nil, err
@@ -49,7 +58,7 @@ func (csv *CSV) GetBaseDates() ([]string, error) {
 }
 
 func (csv *CSV) GetStatements(baseDatesMap map[string]string) ([]finstm.Statement, error) {
-	lines, err := opencsv.OpenCsv(csv.Path)
+	lines, err := openCsv(csv.Path)
 
 	if err != nil {
 		return nil, err

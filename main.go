@@ -39,7 +39,7 @@ func main() {
 	var errorFlag = false
 
 	for _, el := range sourceFiles {
-		csv, err := datasource.NewCSV(el.Path)
+		err := datasource.CheckFile(el.Path)
 		if err != nil {
 			errorFlag = true
 			if err == err.(*os.PathError) {
@@ -48,7 +48,7 @@ func main() {
 				fmt.Print("ERRO: Falha ao verificar existências dos arquivos.")
 			}
 		} else {
-			el.DataSource = csv
+			el.DataSource = &datasource.CSV{Path: el.Path}
 		}
 	}
 	if errorFlag {
