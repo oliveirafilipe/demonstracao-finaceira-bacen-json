@@ -1,5 +1,6 @@
 *.csv
 *.json
 *.exe
+demonstracao-finaceira-bacen-json*
 !testdata/*.csv
 !testdata/*.golden.json
