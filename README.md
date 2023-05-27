@@ -2,6 +2,8 @@
 
 Este projeto tem como objetivo gerar um arquivo no formato JSON (_JavaScript Object Notation_) de acordo com as normas definidas pelo BACEN (Banco Central do Brasil) para Demonstrações Financeiras em JSON – Documento 90x1 ([Referência](https://www.bcb.gov.br/content/estabilidadefinanceira/Documents/Leiaute_de_documentos/CDSFN/Central_de_Demonstracoes_Financeiras-Leiautes_informacoes_tecnicasJSON.pdf)).
 
+![image](https://github.com/oliveirafilipe/demonstracao-finaceira-bacen-json/assets/22033274/79f4a50c-ee09-4b7f-8873-cd0b8f9002ae)
+
 # Da entrada de dados
 
 Esse programa recebe arquivos CSVs como entrada para gerar um único arquivo de saída de formato JSON.
