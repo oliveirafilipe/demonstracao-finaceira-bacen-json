@@ -10,6 +10,15 @@ Esse programa recebe arquivos CSVs como entrada para gerar um único arquivo de 
 
 Estes arquivos de entrada devem ser gerados a partir da "[Planilha Template Demonstrativo Financeiro para JSON](https://docs.google.com/spreadsheets/d/1CtAKQ6g-tetm5wqZNW2sewtqI2fBZxIfjp-3cVRuX84/edit?usp=sharing)", visto que ela possui um padrão esperado pelo programa. Nela estão contidas maiores informações sobre o seu uso.
 
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
 > ⚠️ **Atente-se** ao fato de que um CSV não carregará consigo nenhuma formatação de estilo (negrito, itálico, sublinhado) e que portanto as regras presentes na Planilha Template devem ser corretamente seguidas, para que o programa identifique Subitens.
 
 Após corretamente preenchido, baixe cada planilha no formato CSV, agrupe-os em uma pasta e garanta que estes seguem a seguinte nomenclatura:
